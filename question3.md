@@ -4,3 +4,11 @@
 
 - When you want to create a new commit to undo changes from wrong commits
 - git revert will create a new commit that reverses the changes, preserving history without changing the past
+
+2. git reset:
+
+- When you want to completely remove unwanted commits from the history and go back to the state before the commits were merged.
+- git reset will change the commit history of the production branch, and you need to make sure that these changes do not affect others.
+
+git reset --soft <commitID_C> (Keep changes in working directory)
+git reset --hard <commitID_C> (Discard changes in working directory)
