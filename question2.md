@@ -1,47 +1,61 @@
 ### If we have a feature branch that hasn't been merged to production and that branch has a bug, what course of action are you going to do with Git before resolving the bug?
 
-1. Tạo một bugfix branch từ nhánh master, nếu bug đó đã được merge vào master, và sau khi đã fix xong thì merge về lại nhánh master:
+1. Nếu nhánh master bị bug:
 
+**Trường hợp 1**: Bug do merge logic. Sau khi merge xong gặp lỗi ==> tạo 1 nhánh mới từ master để sửa lỗi, sau khi sửa xong thì tạo pull request vào nhánh master
+
+```sh
 git checkout master
-git checkout -b bugfix/bug-feature
+git checkout -b fix-merge-bug
+```
 
+==> Tạo PR từ nhánh fix-merge-bug vào master
+
+**Trường hợp 2**: nếu muốn sửa lỗi ở master mà không mất các commit trước đó ==> sử dụng git revert để hoàn tác lại quá trình merge, sau đó quay lại nhánh feature để sửa lỗi và tạo pull request vào nhánh master
+
+```sh
 git checkout master
-git merge bugfix/bug-feature
+git revert <merge-commit-id>
 
-2. Tạo một bugfix branch từ nhánh feature, nếu bug đó chưa được merge vào master, và sau khi đã fix xong thì merge về lại nhánh feature ban đầu:
+git checkout feature/feature-base
+```
 
-git checkout feature
-git checkout -b bugfix/bug-feature
+==> sau khi sửa lỗi ở nhánh feature-base xong thì tạo pull request vào nhánh master
 
-git checkout feature
-git merge bugfix/bug-feature
+==> Tạo PR từ nhánh fix-merge-bug vào master
 
-3. Nếu như trên nhánh bug feature đó đã phát triển thêm một feature khác và nhánh bug feature chưa được merge vào master:
+2. Nếu nhánh feature đang code bị bug:
 
-**Hướng giải quyết**: Tạo một nhánh mới từ bug feature để sửa lỗi, sau đó merge vào nhánh bug feature
+**Hướng giải quyết**: Tiến hành sửa lỗi ngay trên nhánh feature đang bị bug, sao đó push lên origin như bình thường
 
-git checkout feature/bug-feature
-git checkout -b bugfix/fix-bug-feature
+```sh
+git checkout feature/feature-base
+# Sửa lỗi trong mã của bạn
+git add .
+git commit -m "Fix bug in feature logic"
+```
 
-git checkout feature/bug-feature
-git merge bugfix/fix-bug-feature
+3. Nhánh feature bị bug nhưng bug tới từ nhánh feature khác mà mình base trên đó:
 
-**Hướng giải quyết**: Sau đó tiếp tục merge nhánh bug feature vào nhánh feature khác đã được tách ra trước đó để sửa lỗi nếu có phát sinh bug
+**Hướng giải quyết**: checkout về nhánh feature-base để sử lỗi như bình thường, tiếp theo hãy chuyển sang nhánh feature, sau đó merge nhánh feature-base vào nhánh feature để tiến hành sửa lỗi
+
+```sh
+git checkout feature/feature-base
+# sửa lỗi tại nhánh feature-base
 
 git checkout feature/sub-feature
-git merge feature/bug-feature
+git merge feature/feature-base
+```
 
-4. Nếu như có một feature khác đã xây dựng trên bug-feature và đã merge vào master
+4. Nhánh feature bị bug nhưng bug là do gom code từ các nhánh đang phát triển khác và lúc merge vào bị conflict logic
 
-**Hướng giải quyết**: Vì đã được merge vào master, nên ta sẽ checkout 1 nhánh từ nhánh master để fix bug đấy, và sau khi fix xong sẽ merge lại vào master.
+**Hướng giải quyết**: checkout một nhánh mới từ feature-base bị bug do gom code, sau đó tiến hành fix conflict đã merge trước đó, sau khi fix xong merge lại vào nhánh feature/base.
 
-git checkout master
-git checkout -b bugfix/fix-bug-feature
+```sh
+git checkout feature/feature-base
+git checkout -b feature/new-feature
+# tiến hành fix conflict
 
-git checkout master
-git merge bugfix/fix-bug-feature
-
-**Hướng giải quyết**: Sau đó tiếp tục merge master vào nhánh feature khác đã được tách ra trước đó để sửa lỗi nếu có phát sinh bug
-
-git checkout feature/sub-feature
-git merge master
+git checkout feature/feature-base
+git merge feature/new-feature
+```
