@@ -1,25 +1,32 @@
 ### When creating a new feature, what branch should we base it on and why?
 
-1. Create branch from master (for experimental features):
+1. Nếu trong trường hợp tính năng mới cần release trước nhưng trong master lại đang có những tính năng chưa cần release
 
-- If the new feature is in the experimental (thử nghiệm) development phase and needs to be tested, test it in a test environment.
-- Master is a branch that contains experimental features for the test site, helping you ensure the feature works as expected before pushing to the production environment.
-
-git checkout master
-git checkout -b <feature-branch-name>
-
-2. Create a branch from develop:
-
-- If there is a develop branch in the GitFlow workflow, new features will be developed on develop instead of master.
-- Develop contains all the features that are being developed and tested in the test environment, ready to be merged into master.
-
-git checkout develop
-git checkout -b <feature-branch-name>
-
-3. Create a branch from production (in case you need to test and develop a feature that is ready to deploy):
-
-- If the feature is almost complete and you want to test it in a production test environment.
-- Ensure features are tested in close-to-production environments before going live
+**Trả lời**
+==> Checkout trực tiếp từ production để phát triển tính năng mới. Vì nhánh master đang chứa những feature chưa cần release, và feature mới này lại không liên quan gì đến những feature trên nhánh master thì ta nên ưu tiên việc checkout từ production branch
 
 git checkout production
-git checkout -b <feature-branch-name>
+git checkout -b <new-feature>
+
+2. Nếu như feature branch mới đang cần dựa vào một feature branch khác đã được update xong
+
+**Trả lời**
+==> checkout từ feature branch đã chạy ổn định và sau khi làm xong thì có thể merge lại nhánh feature đã chạy ổn định đấy
+
+git checkout <feature-branch>
+git checkout -b <new-feature-branch>
+
+git checkout <feature-branch>
+git merge <new-feature-branch>
+
+3. Nếu như feature branch mới đang cần dựa vào một feature branch khác nhưng lại chưa được update xong
+
+**Trả lời**
+==> checkout từ feature branch với lần commit mới nhất đã chạy ổn định và sau khi làm xong thì có thể merge lại nhánh feature đã chạy ổn định đấy
+
+git checkout <feature-branch>
+git checkout -b <new-feature-branch>
+git reset --hard <commitId-stable>
+
+git checkout <feature-branch>
+git merge <new-feature-branch>
