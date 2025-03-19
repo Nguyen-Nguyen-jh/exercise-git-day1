@@ -7,6 +7,7 @@
 ```sh
 git checkout master
 git checkout -b fix-merge-bug
+# tiến hành sửa lỗi
 ```
 
 ==> Tạo PR từ nhánh fix-merge-bug vào master
@@ -18,11 +19,10 @@ git checkout master
 git revert <merge-commit-id>
 
 git checkout feature/feature-base
+# tiến hành sửa lỗi
 ```
 
 ==> sau khi sửa lỗi ở nhánh feature-base xong thì tạo pull request vào nhánh master
-
-==> Tạo PR từ nhánh fix-merge-bug vào master
 
 2. Nếu nhánh feature đang code bị bug:
 
