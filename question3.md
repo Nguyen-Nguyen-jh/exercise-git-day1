@@ -12,3 +12,8 @@
 
 git reset --soft <commitID_C> (Keep changes in working directory)
 git reset --hard <commitID_C> (Discard changes in working directory)
+
+3. git relog
+
+- When you need to retrieve previous states but don't remember the commit ID.
+- git reflog records every change in branches and allows you to find previous states to perform reverts or resets.
